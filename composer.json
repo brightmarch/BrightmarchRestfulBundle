@@ -15,5 +15,6 @@
     },
     "autoload": {
         "psr-0": { "Brightmarch\\RestfulBundle": "" }
-    }
+    },
+    "target-dir": "Brightmarch/RestfulBundle"
 }
