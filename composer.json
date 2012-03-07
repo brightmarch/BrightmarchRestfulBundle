@@ -1,0 +1,19 @@
+{
+    "name": "brightmarch/restful-bundle",
+    "description": "A useful bundle for easily creating RESTful resources.",
+    "keywords": ["restful","rest","http","api"],
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vic Cherubini",
+            "email": "vmc@leftnode.com"
+        }
+    ],
+    "require": {
+        "symfony/framework-bundle": "2.1.*"
+    },
+    "autoload": {
+        "psr-0": { "Brightmarch\\RestfulBundle": "" }
+    }
+}
