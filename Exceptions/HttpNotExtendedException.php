@@ -1,4 +1,4 @@
-<?php namespace Brightmarch\RestfulBundle\Exceptions;
+<?php namespace Brightmarch\Bundle\RestfulBundle\Exceptions;
 
 class HttpNotExtendedException extends HttpException 
 {

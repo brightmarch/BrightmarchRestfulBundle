@@ -1,6 +1,6 @@
 <?php
 
-namespace Brightmarch\RestfulBundle;
+namespace Brightmarch\Bundle\RestfulBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

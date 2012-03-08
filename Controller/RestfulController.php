@@ -1,13 +1,13 @@
 <?php
 
-namespace Brightmarch\RestfulBundle\Controller;
+namespace Brightmarch\Bundle\RestfulBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
-use Brightmarch\RestfulBundle\Exceptions\HttpNotAcceptableException;
-use Brightmarch\RestfulBundle\Exceptions\HttpNotExtendedException;
-use Brightmarch\RestfulBundle\Exceptions\HttpUnauthorizedException;
+use Brightmarch\Bundle\RestfulBundle\Exceptions\HttpNotAcceptableException;
+use Brightmarch\Bundle\RestfulBundle\Exceptions\HttpNotExtendedException;
+use Brightmarch\Bundle\RestfulBundle\Exceptions\HttpUnauthorizedException;
 
 class RestfulController extends Controller
 {

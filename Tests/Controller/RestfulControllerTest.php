@@ -1,6 +1,6 @@
 <?php
 
-namespace Brightmarch\RestfulBundle\Tests\Controller;
+namespace Brightmarch\Bundle\RestfulBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

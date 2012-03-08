@@ -14,7 +14,7 @@
         "symfony/framework-bundle": "2.1.*"
     },
     "autoload": {
-        "psr-0": { "Brightmarch\\RestfulBundle": "" }
+        "psr-0": { "Brightmarch\\Bundle\\RestfulBundle": "" }
     },
     "target-dir": "Brightmarch/Bundle/RestfulBundle"
 }
