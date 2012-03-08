@@ -2,7 +2,7 @@
 This is a very small but powerful Symfony2 bundle for quickly building RESTful resources (specifically, HTTP API's).
 
 ## Installation
-Installation is relatively easy. It requires XXX steps. Start by adding the right dependency to your `deps` file and install the new bundle.
+Installation is relatively easy. It requires three steps. Start by adding the right dependency to your `deps` file and install the new bundle.
 
     [BrightmarchRestfulBundle]
     git=http://github.com/brightmarch/BrightmarchRestfulBundle.git
