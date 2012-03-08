@@ -1,6 +1,6 @@
 <?php
 
-namespace Brightmarch\RestfulBundle\DependencyInjection;
+namespace Brightmarch\Bundle\RestfulBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
