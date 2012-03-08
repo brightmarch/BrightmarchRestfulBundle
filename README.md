@@ -121,11 +121,11 @@ You will notice there are two `_links` records. One points directly back to itse
 ## Errors
 This bundle supports handling HTTP errors properly. It comes with several exceptions for handling errors. They include:
 
-* HttpBadSyntaxException, HTTP Status Code: 400
-* HttpNotAcceptableException, HTTP Status Code: 406
-* HttpNotExtendedException, HTTP Status Code: 510
-* HttpNotFoundException, HTTP Status Code: 404
-* HttpUnauthorizedException, HTTP Status Code: 401
+* 400: HttpBadSyntaxException
+* 406: HttpNotAcceptableException
+* 510: HttpNotExtendedException
+* 404: HttpNotFoundException
+* 401: HttpUnauthorizedException
 
 The `catch` in the `indexAction` above will automatically catch these errors and render them. The HTTP spec specifies that error responses do not have to correspond with an Accept header. Thus, all error responses are given in JSON. The error response template looks like this:
 
