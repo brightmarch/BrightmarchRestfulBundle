@@ -72,16 +72,16 @@ To start, you will most likely want to start with your own bundle. Each resource
 
 You must describe what content types this resource supports. This means if a client sends an Accept header with a content type this resource does not accept, a 406 Unacceptable response will be returned. Because this resource supports three content types, you must have three different views: index.json.twig, index.xml.twig, and index.html.twig.
 
-### `index.json.twig`
+### index.json.twig
     {"message": {{ message|json_encode|raw }}}
 
-### `index.xml.twig`
+### index.xml.twig
     <?xml version="1.0" encoding="UTF-8"?>
     <accthub>
         <message>{{ message }}</message>
     </accthub>
 
-### `index.html.twig`
+### index.html.twig
     <!doctype html>
     <html>
     <head>
@@ -122,7 +122,9 @@ You will notice there are two `_links` records. One points directly back to itse
 This bundle supports handling HTTP errors properly. It comes with several exceptions for handling errors. They include:
 
 * 400: `HttpBadSyntaxException`
+* 405: `HttpMethodNotAllowedException`
 * 406: `HttpNotAcceptableException`
+* 409: `HttpConflictException`
 * 510: `HttpNotExtendedException`
 * 404: `HttpNotFoundException`
 * 401: `HttpUnauthorizedException`
