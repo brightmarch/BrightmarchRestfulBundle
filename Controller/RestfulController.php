@@ -34,9 +34,7 @@ class RestfulController extends Controller
             ->buildViewTemplate($view)
             ->checkViewTemplateExists();
 
-        $response = new Response;
-        $response->setProtocolVersion('1.1');
-        $response->setStatusCode($status_code);
+        $response = $this->createResponse($status_code);
         $response->headers->set('Content-Type', $this->contentType);
         
         return($this->render($this->viewTemplateName, $parameters, $response));
@@ -53,9 +51,7 @@ class RestfulController extends Controller
         
         // HTTP spec says we can render error messages in whatever
         // content we wish, so all error messages will be rendered in JSON.
-        $response = new Response;
-        $response->setProtocolVersion('1.1');
-        $response->setStatusCode($status_code);
+        $response = $this->createResponse($status_code);
         $response->headers->set('Content-Type', 'application/json; charset=utf-8');
         
         // Give the user the chance to authenticate the request.
@@ -111,6 +107,16 @@ class RestfulController extends Controller
     
     
     
+    private function createResponse($status_code)
+    {
+        $response = new Response;
+        $response->setProtocolVersion('1.1');
+        $response->setStatusCode($status_code);
+        $response->headers->set('X-Men', $this->randomXPerson()); // PC here
+        
+        return($response);
+    }
+    
     private function findContentType()
     {
         $content_type = current($this->availableTypes);
@@ -143,4 +149,17 @@ class RestfulController extends Controller
         return($this);
     }
 
+    private function randomXPerson()
+    {
+        $xpeople = array('Professor X', 'Cyclops', 'Jean Grey', 'Wolverine',
+            'Storm', 'Rogue', 'Gambit', 'Jubilee', 'Beast', 'Morph', 'Iceman',
+            'Polaris', 'Archangel', 'Angel', 'Colossus', 'Nightcrawler', 'Shadowcat',
+            'Firestar', 'Thunderbird', 'Dazzler'
+        );
+        $xpeople_count = count($xpeople)-1;
+        $xperson_idx = mt_rand(0, $xpeople_count);
+        
+        return($xpeople[$xperson_idx]);
+    }
+    
 }
