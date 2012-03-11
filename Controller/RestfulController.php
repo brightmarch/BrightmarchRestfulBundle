@@ -109,10 +109,13 @@ class RestfulController extends Controller
     
     private function createResponse($status_code)
     {
+        $memory_usage = round((memory_get_peak_usage() / 1048576), 4);
+        
         $response = new Response;
         $response->setProtocolVersion('1.1');
         $response->setStatusCode($status_code);
-        $response->headers->set('X-Men', $this->randomXPerson()); // PC here
+        $response->headers->set('X-Men', $this->randomXPerson());
+        $response->headers->set('X-Memory-Usage', $memory_usage);
         
         return($response);
     }
@@ -143,7 +146,11 @@ class RestfulController extends Controller
     
     private function checkViewTemplateExists()
     {
-        if (!$this->container->get('templating')->exists($this->viewTemplateName)) {
+        $template_exists = $this->container
+            ->get('templating')
+            ->exists($this->viewTemplateName);
+            
+        if (!$template_exists) {
             throw new HttpNotExtendedException(sprintf("The view %s does not exist. While this resource claims it can support this content type, it has no way to render it properly.", $this->viewTemplateName));
         }
         return($this);
