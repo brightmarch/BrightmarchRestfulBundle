@@ -125,7 +125,10 @@ class RestfulController extends Controller
         $content_type = current($this->availableTypes);
         if ('*/*' != $content_type) {
             $this->contentType = $content_type;
+        } elseif (count($this->supportedTypes) > 0) {
+            $this->contentType = current($this->supportedTypes);
         }
+
         return($this);
     }
     
