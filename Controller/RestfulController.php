@@ -37,12 +37,6 @@ class RestfulController extends Controller
         $response = $this->createResponse($status_code);
         $response->headers->set('Content-Type', $this->contentType);
         
-        // We know the database is no longer needed, so kill off the connection.
-        $this->getDoctrine()
-            ->getEntityManager()
-            ->getConnection()
-            ->close();
-
         return($this->render($this->viewTemplateName, $parameters, $response));
     }
     
