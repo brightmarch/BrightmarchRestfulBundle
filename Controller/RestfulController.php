@@ -86,7 +86,7 @@ class RestfulController extends Controller
         }
         return($parameters);
     }
-  
+
     
     
     protected function canClientAcceptThisResponse()
