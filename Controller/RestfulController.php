@@ -64,6 +64,28 @@ class RestfulController extends Controller
             $response
         ));
     }
+
+    public function isResourceValid($resource)
+    {
+        if (!is_object($resource)) {
+            return(false);
+        }
+
+        $errors = $this->get('validator')
+            ->validate($resource);
+        return(0 === count($errors));
+    }
+
+    public function getParameters($key)
+    {
+        $parameters = array();
+        if ($this->getRequest()->request->has($key)) {
+            $parameters = $this->getRequest()
+                ->request
+                ->get($key);
+        }
+        return($parameters);
+    }
   
     
     
