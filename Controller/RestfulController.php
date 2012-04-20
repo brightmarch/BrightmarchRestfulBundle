@@ -56,7 +56,7 @@ class RestfulController extends Controller
         
         // Give the user the chance to authenticate the request.
         if ($e instanceof HttpUnauthorizedException) {
-            $response->headers->set('WWW-Authenticate', 'Basic realm=Accthub');
+            $response->headers->set('WWW-Authenticate', 'Basic realm=Secure Website');
         }
         
         return($this->render('BrightmarchRestfulBundle:Restful:exception.json.twig',
@@ -76,6 +76,12 @@ class RestfulController extends Controller
         return(0 === count($errors));
     }
 
+    public function hasParametersParameter($p, $k)
+    {
+        $parameters = $this->getParameters($p);
+        return(array_key_exists($k, $parameters));
+    }
+
     public function getParameters($key)
     {
         $parameters = array();
@@ -85,6 +91,15 @@ class RestfulController extends Controller
                 ->get($key);
         }
         return($parameters);
+    }
+
+    public function getParametersParameter($p, $k)
+    {
+        $parameters = $this->getParameters($p);
+        if (array_key_exists($k, $parameters)) {
+            return($parameters[$k]);
+        }
+        return(null);
     }
 
     
