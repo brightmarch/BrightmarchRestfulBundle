@@ -34,7 +34,7 @@ abstract class Entity
      */
     public function fetchParameter($key, array $parameters, $member)
     {
-        $setter = $this->buildSetter($key);
+        $setter = $this->buildSetter($member);
         if (array_key_exists($key, $parameters) && method_exists($this, $setter)) {
             $this->$setter($parameters[$key]);
         }
