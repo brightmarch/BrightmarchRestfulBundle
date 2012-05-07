@@ -47,7 +47,7 @@ class RestfulController extends Controller
     
     public function renderException(\Exception $e)
     {
-        $status_code = ((int)$e->getCode() > 0 ? (int)$e->getCode() : 500);
+        $status_code = ((int)$e->getCode() > 0 && (int)$e->getCode() < 600 ? (int)$e->getCode() : 500);
         
         // HTTP spec says we can render error messages in whatever
         // content we wish, so all error messages will be rendered in JSON.
@@ -84,12 +84,10 @@ class RestfulController extends Controller
 
     public function getParameters($key)
     {
-        $parameters = array();
-        if ($this->getRequest()->request->has($key)) {
-            $parameters = $this->getRequest()
-                ->request
-                ->get($key);
-        }
+        $parameters = $this->getRequest()
+            ->request
+            ->get($key, array());
+
         return($parameters);
     }
 
