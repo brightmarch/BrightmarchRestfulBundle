@@ -9,16 +9,30 @@ abstract class Entity
     {
     }
 
+    /**
+     * Enable an entity.
+     */
     public function enable()
     {
         $this->status = 1;
         return($this);
     }
-    
+
+    /**
+     * Disable an entity.
+     */
     public function disable()
     {
         $this->status = 0;
         return($this);
+    }
+
+    /**
+     * Determine if an entity is enabled or not.
+     */
+    public function isEnabled()
+    {
+        return(1 == $this->status);
     }
 
     /**
