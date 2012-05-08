@@ -55,6 +55,21 @@ abstract class Entity
         return($this);
     }
 
+    /**
+     * Returns the numeric value for an enabled entity.
+     */
+    public static function enabledFlag()
+    {
+        return(1);
+    }
+
+    /**
+     * Returns the numeric value for a disabled entity.
+     */
+    public static function disabledFlag()
+    {
+        return(0);
+    }
 
 
     /**
