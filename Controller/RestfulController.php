@@ -23,12 +23,13 @@ class RestfulController extends Controller
     public function resourceSupports()
     {
         $this->supportedTypes = array_merge(func_get_args(), $this->supportedTypes);
+        $this->canClientAcceptThisResponse();
+
         return($this);
     }
     
     public function renderResource($view, array $parameters=array(), $status_code=200)
     {
-        $this->canClientAcceptThisResponse();
         $this->findContentType()
             ->findViewType()
             ->buildViewTemplate($view)
@@ -43,6 +44,11 @@ class RestfulController extends Controller
     public function renderCreatedResource($view, array $parameters=array())
     {
         return($this->renderResource($view, $parameters, 201));
+    }
+
+    public function renderAcceptedResource($view, array $parameters=array())
+    {
+        return($this->renderResource($view, $parameters, 202));
     }
     
     public function renderException(\Exception $e)
