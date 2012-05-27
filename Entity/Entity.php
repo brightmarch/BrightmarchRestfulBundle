@@ -15,6 +15,7 @@ abstract class Entity
     public function enable()
     {
         $this->status = 1;
+
         return($this);
     }
 
@@ -24,6 +25,7 @@ abstract class Entity
     public function disable()
     {
         $this->status = 0;
+
         return($this);
     }
 
@@ -38,7 +40,7 @@ abstract class Entity
     /**
      * Method meant to be overwritten to load specific parameters from an array.
      */
-    public function loadFromParameters(array $parameters)
+    public function hydrate(array $parameters)
     {
         return($this);
     }
@@ -46,12 +48,13 @@ abstract class Entity
     /**
      * Grab a specific parameter and set it internally.
      */
-    public function fetchParameter($key, array $parameters, $member)
+    public function fetch($key, array $parameters)
     {
-        $setter = $this->buildSetter($member);
+        $setter = $this->buildSetter($key);
         if (array_key_exists($key, $parameters) && method_exists($this, $setter)) {
             $this->$setter($parameters[$key]);
         }
+
         return($this);
     }
 
@@ -70,6 +73,7 @@ abstract class Entity
     {
         return(0);
     }
+
 
 
     /**
