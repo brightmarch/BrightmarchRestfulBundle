@@ -30,6 +30,14 @@ abstract class Entity
     }
 
     /**
+     * Determine if an entity is created or not.
+     */
+    public function isCreated()
+    {
+        return($this->id > 0);
+    }
+
+    /**
      * Determine if an entity is enabled or not.
      */
     public function isEnabled()
