@@ -11,6 +11,8 @@ abstract class Entity
 
     /**
      * Enable an entity.
+     *
+     * @return this
      */
     public function enable()
     {
@@ -21,6 +23,8 @@ abstract class Entity
 
     /**
      * Disable an entity.
+     *
+     * @return this
      */
     public function disable()
     {
@@ -30,15 +34,19 @@ abstract class Entity
     }
 
     /**
-     * Determine if an entity is created or not.
+     * Determine if an entity is persisted to the datastore or not.
+     *
+     * @return boolean
      */
-    public function isCreated()
+    public function isPersisted()
     {
         return($this->id > 0);
     }
 
     /**
      * Determine if an entity is enabled or not.
+     *
+     * @return boolean
      */
     public function isEnabled()
     {
@@ -47,6 +55,8 @@ abstract class Entity
 
     /**
      * Method meant to be overwritten to load specific parameters from an array.
+     *
+     * @return this
      */
     public function hydrate(array $parameters)
     {
@@ -55,6 +65,10 @@ abstract class Entity
 
     /**
      * Grab a specific parameter and set it internally.
+     *
+     * @param string The key in the parameters to fetch.
+     * @param array The key-value array of parameters.
+     * @return this
      */
     public function fetch($key, array $parameters)
     {
@@ -68,6 +82,8 @@ abstract class Entity
 
     /**
      * Returns the numeric value for an enabled entity.
+     *
+     * @return integer
      */
     public static function enabledFlag()
     {
@@ -76,6 +92,8 @@ abstract class Entity
 
     /**
      * Returns the numeric value for a disabled entity.
+     *
+     * @return integer
      */
     public static function disabledFlag()
     {
@@ -87,6 +105,8 @@ abstract class Entity
     /**
      * Turn a key like billing_fullname to BillingFullname and
      * then create a setter method like setBillingFullname.
+     *
+     * @return string
      */
     private function buildSetter($key)
     {
