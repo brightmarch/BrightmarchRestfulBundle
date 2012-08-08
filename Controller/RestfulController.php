@@ -3,8 +3,9 @@
 namespace Brightmarch\Bundle\RestfulBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
+#use Symfony\Component\HttpFoundation\Response;
 
+use Brightmarch\Bundle\RestfulBundle\HttpFoundation\Response as RestfulResponse;
 use Brightmarch\Bundle\RestfulBundle\Exceptions\HttpNotAcceptableException;
 use Brightmarch\Bundle\RestfulBundle\Exceptions\HttpNotExtendedException;
 use Brightmarch\Bundle\RestfulBundle\Exceptions\HttpUnauthorizedException;
@@ -20,7 +21,15 @@ class RestfulController extends Controller
     private $viewType = '';
     private $viewTemplateName = '';
     private $viewTemplate = '%s.%s.twig';
+
+    private $internalPayload = null;
     
+    /**
+     * Set a list of content types that this resource supports.
+     *
+     * @param [string, string, ...]
+     * @return this
+     */
     public function resourceSupports()
     {
         $this->supportedTypes = array_merge(func_get_args(), $this->supportedTypes);
@@ -29,6 +38,14 @@ class RestfulController extends Controller
         return($this);
     }
     
+    /**
+     * Creates a Response object and returns it.
+     *
+     * @param string
+     * @param array
+     * @param integer
+     * @return Response
+     */
     public function renderResource($view, array $parameters=array(), $statusCode=200)
     {
         $this->findContentType()
@@ -38,6 +55,7 @@ class RestfulController extends Controller
 
         $response = $this->createResponse($statusCode);
         $response->headers->set('Content-Type', $this->contentType);
+        $response->setInternalPayload($this->internalPayload);
         
         return($this->render($this->viewTemplateName, $parameters, $response));
     }
@@ -60,16 +78,19 @@ class RestfulController extends Controller
         // content we wish, so all error messages will be rendered in JSON.
         $response = $this->createResponse($statusCode);
         $response->headers->set('Content-Type', 'application/json; charset=utf-8');
+        $response->setInternalPayload($e);
         
         // Give the user the chance to authenticate the request.
         if ($e instanceof HttpUnauthorizedException) {
-            $response->headers->set('WWW-Authenticate', 'Basic realm=Secure Website');
+            $response->headers->set('WWW-Authenticate', 'Basic realm=Secure Hypermedia Resource');
         }
         
-        return($this->render('BrightmarchRestfulBundle:Restful:exception.json.twig',
-            array('http_code' => $statusCode, 'message' => $e->getMessage()),
-            $response
-        ));
+        return(
+            $this->render('BrightmarchRestfulBundle:Restful:exception.json.twig',
+                array('http_code' => $statusCode, 'message' => $e->getMessage()),
+                $response
+            )
+        );
     }
 
     public function isResourceValid($resource)
@@ -82,6 +103,13 @@ class RestfulController extends Controller
             ->validate($resource);
         
         return(0 === count($this->errors));
+    }
+
+    public function setInternalPayload($internalPayload)
+    {
+        $this->internalPayload = $internalPayload;
+
+        return($this);
     }
 
     public function getErrors()
@@ -138,7 +166,7 @@ class RestfulController extends Controller
     {
         $memoryUsage = round((memory_get_peak_usage() / 1048576), 4);
         
-        $response = new Response;
+        $response = new RestfulResponse;
         $response->setProtocolVersion('1.1');
         $response->setStatusCode($statusCode);
         $response->headers->set('X-Men', $this->randomXPerson());
