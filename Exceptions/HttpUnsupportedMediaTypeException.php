@@ -2,12 +2,12 @@
 
 namespace Brightmarch\Bundle\RestfulBundle\Exceptions;
 
-class HttpBadSyntaxException extends HttpException 
+class HttpUnsupportedMediaTypeException extends HttpException 
 {
 
     public function __construct($message)
     {
-        parent::__construct($message, 400);
+        parent::__construct($message, 415);
     }
 
 }
