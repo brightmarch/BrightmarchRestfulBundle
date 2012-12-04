@@ -1,16 +1,14 @@
 # Symfony2 RESTful Bundle
-This is a very small but powerful Symfony2 bundle for quickly building RESTful resources (specifically, HTTP API's).
+This is a very small but powerful Symfony2 bundle for quickly building RESTful resources (specifically, HTTP APIs).
 
 ## Installation
-Installation is relatively easy. It requires three steps. Start by adding the right dependency to your `deps` file and install the new bundle.
+Installation is relatively easy. It requires three steps. Start by adding the right dependency to your `composer.json` file and install the new bundle.
 
-    [BrightmarchRestfulBundle]
-    git=http://github.com/brightmarch/BrightmarchRestfulBundle.git
-    target=/bundles/Brightmarch/Bundle/RestfulBundle
+    "brightmarch/restful-bundle": "*"
 
 You can safely assume that what is in `master` is always up to date.
 
-    $ php bin/vendors update
+    $ composer.phar install brightmarch/restful-bundle
 
 Once installed, add it to `app/AppKernel.php` in the main `$bundles` array. You do not want this to be part of the dev system only.
 
@@ -19,14 +17,6 @@ Once installed, add it to `app/AppKernel.php` in the main `$bundles` array. You 
         // ... other bundles ... //
         new Brightmarch\Bundle\RestfulBundle\BrightmarchRestfulBundle(),
     );
-
-Finally, add `Brightmarch` to the `app/autoload.php` file so the bundle is loaded correctly.
-
-    $loader->registerNamespaces(array(
-        'Symfony'     => array(__DIR__.'/../vendor/symfony/src', __DIR__.'/../vendor/bundles'),
-        // ... other namespaces ... //
-        'Brightmarch' => __DIR__.'/../vendor/bundles',
-    ));
 
 Installation is complete, you are now ready to begin building a RESTful resource.
 
@@ -49,23 +39,11 @@ To start, you will most likely want to start with your own bundle. Each resource
         // A typical Symfony2 action
         public function indexAction()
         {
-        
-            // Exceptions are used heavily, and to the best of my knowledge, Symfony2
-            // has no way to automatically catch them in a controller, so you must
-            // do that yourself.
-            try {
+            // Describe what content types this resource supports.
+            $this->resourceSupports('application/json', 'application/xml', 'text/html');
             
-                // Describe what content types this resource supports.
-                $this->resourceSupports('application/json', 'application/xml', 'text/html');
-                
-                // Render a view. The type of the view will automatically be found based on the Accept header.
-                return($this->renderResource('BrightmarchResourceBundle:Resource:index',
-                    array('message' => 'Welcome to my RESTful resource!')));
-
-            } catch (\Exception $e) {
-                return($this->renderException($e));
-            }
-        
+            // Render a view. The type of the view will automatically be found based on the Accept header.
+            return $this->renderResource('BrightmarchResourceBundle:Resource:index', ['message' => 'Welcome to my RESTful resource!']));
         }
 
     }
@@ -73,7 +51,11 @@ To start, you will most likely want to start with your own bundle. Each resource
 You must describe what content types this resource supports. This means if a client sends an Accept header with a content type this resource does not accept, a 406 Unacceptable response will be returned. Because this resource supports three content types, you must have three different views: index.json.twig, index.xml.twig, and index.html.twig.
 
 ### index.json.twig
-    {"message": {{ message|json_encode|raw }}}
+    {% autoescape false %}
+    {
+        "message": {{ message|json_encode }}
+    }
+    {% endautoescape %}
 
 ### index.xml.twig
     <?xml version="1.0" encoding="UTF-8"?>
@@ -125,15 +107,16 @@ This bundle supports handling HTTP errors properly. It comes with several except
 * 405: `HttpMethodNotAllowedException`
 * 406: `HttpNotAcceptableException`
 * 409: `HttpConflictException`
+* 415: `HttpUnsupportedMediaTypeException`
 * 510: `HttpNotExtendedException`
 * 404: `HttpNotFoundException`
 * 401: `HttpUnauthorizedException`
 
-The `catch` in the `indexAction` above will automatically catch these errors and render them. The HTTP spec specifies that error responses do not have to correspond with an Accept header. Thus, all error responses are given in JSON. The error response template looks like this:
+You are responsible for rendering your errors. There is a default template located in `Resources/views/Restful/error.json.twig`. I suggest reading about catching kernel exceptions in Symfony for how to catch and return HTTP REST errors. The error response template looks like this:
 
     {% autoescape false %}
     {
-        "http_code": {{ http_code }},
+        "httpCode": {{ httpCode }},
         "message": {{ message|json_encode }}
     }
     {% endautoescape %}
@@ -147,7 +130,7 @@ The HTTP code will also be sent back as part of the response payload. For exampl
     < Content-Type: application/json; charset=utf-8
     < 
     {
-        "http_code": 406,
+        "httpCode": 406,
         "message": "This resource can not respond with a format the client will find acceptable. This resource supports: [application\/json, application\/xml, text\/html]."
     }
 
