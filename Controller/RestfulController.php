@@ -3,9 +3,8 @@
 namespace Brightmarch\Bundle\RestfulBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-#use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Response;
 
-use Brightmarch\Bundle\RestfulBundle\HttpFoundation\Response as RestfulResponse;
 use Brightmarch\Bundle\RestfulBundle\Exceptions\HttpNotAcceptableException;
 use Brightmarch\Bundle\RestfulBundle\Exceptions\HttpNotExtendedException;
 use Brightmarch\Bundle\RestfulBundle\Exceptions\HttpUnauthorizedException;
@@ -13,17 +12,24 @@ use Brightmarch\Bundle\RestfulBundle\Exceptions\HttpUnauthorizedException;
 class RestfulController extends Controller
 {
     
-    private $supportedTypes = array('*/*');
-    private $availableTypes = array();
-    private $errors = array();
-    
+    /** @var array */
+    private $supportedTypes = ['*/*'];
+
+    /** @var array */
+    private $availableTypes = [];
+
+    /** @var string */
     private $contentType = 'text/html';
+
+    /** @var string */
     private $viewType = '';
+
+    /** @var string */
     private $viewTemplateName = '';
+
+    /** @var string */
     private $viewTemplate = '%s.%s.twig';
 
-    private $internalPayload = null;
-    
     /**
      * Set a list of content types that this resource supports.
      *
@@ -35,7 +41,7 @@ class RestfulController extends Controller
         $this->supportedTypes = array_merge(func_get_args(), $this->supportedTypes);
         $this->canClientAcceptThisResponse();
 
-        return($this);
+        return $this;
     }
     
     /**
@@ -46,7 +52,7 @@ class RestfulController extends Controller
      * @param integer
      * @return Response
      */
-    public function renderResource($view, array $parameters=array(), $statusCode=200)
+    public function renderResource($view, array $parameters=[], $statusCode=200)
     {
         $this->findContentType()
             ->findViewType()
@@ -54,67 +60,20 @@ class RestfulController extends Controller
             ->checkViewTemplateExists();
 
         $response = $this->createResponse($statusCode);
-        $response->headers->set('Content-Type', $this->contentType);
-        $response->setInternalPayload($this->internalPayload);
-        
-        return($this->render($this->viewTemplateName, $parameters, $response));
+        $response->headers
+            ->set('Content-Type', $this->contentType);
+
+        return $this->render($this->viewTemplateName, $parameters, $response);
     }
     
-    public function renderCreatedResource($view, array $parameters=array())
+    public function renderCreatedResource($view, array $parameters=[])
     {
-        return($this->renderResource($view, $parameters, 201));
+        return $this->renderResource($view, $parameters, 201);
     }
 
-    public function renderAcceptedResource($view, array $parameters=array())
+    public function renderAcceptedResource($view, array $parameters=[])
     {
-        return($this->renderResource($view, $parameters, 202));
-    }
-    
-    public function renderException(\Exception $e)
-    {
-        $statusCode = ((int)$e->getCode() > 100 && (int)$e->getCode() < 600 ? (int)$e->getCode() : 500);
-        
-        // HTTP spec says we can render error messages in whatever
-        // content we wish, so all error messages will be rendered in JSON.
-        $response = $this->createResponse($statusCode);
-        $response->headers->set('Content-Type', 'application/json; charset=utf-8');
-        $response->setInternalPayload($e);
-        
-        // Give the user the chance to authenticate the request.
-        if ($e instanceof HttpUnauthorizedException) {
-            $response->headers->set('WWW-Authenticate', 'Basic realm=Secure Hypermedia Resource');
-        }
-        
-        return(
-            $this->render('BrightmarchRestfulBundle:Restful:exception.json.twig',
-                array('http_code' => $statusCode, 'message' => $e->getMessage()),
-                $response
-            )
-        );
-    }
-
-    public function isResourceValid($resource)
-    {
-        if (!is_object($resource)) {
-            return(false);
-        }
-
-        $this->errors = $this->get('validator')
-            ->validate($resource);
-        
-        return(0 === count($this->errors));
-    }
-
-    public function setInternalPayload($internalPayload)
-    {
-        $this->internalPayload = $internalPayload;
-
-        return($this);
-    }
-
-    public function getErrors()
-    {
-        return($this->errors);
+        return $this->renderResource($view, $parameters, 202);
     }
 
     
@@ -124,14 +83,14 @@ class RestfulController extends Controller
         $this->findAvailableTypes()
             ->checkAvailableTypes();
 
-        return(true);
+        return true;
     }
     
     protected function findAvailableTypes()
     {
         $this->availableTypes = array_intersect($this->getRequest()->getAcceptableContentTypes(), $this->supportedTypes);
 
-        return($this);
+        return $this;
     }
     
     protected function checkAvailableTypes()
@@ -140,7 +99,7 @@ class RestfulController extends Controller
             $this->throwNotAcceptableException();
         }
 
-        return(true);
+        return true;
     }
     
     protected function throwNotAcceptableException()
@@ -166,13 +125,15 @@ class RestfulController extends Controller
     {
         $memoryUsage = round((memory_get_peak_usage() / 1048576), 4);
         
-        $response = new RestfulResponse;
+        $response = new Response;
         $response->setProtocolVersion('1.1');
         $response->setStatusCode($statusCode);
-        $response->headers->set('X-Men', $this->randomXPerson());
-        $response->headers->set('X-Memory-Usage', $memoryUsage);
+        $response->headers
+            ->set('X-Men', $this->randomXPerson());
+        $response->headers
+            ->set('X-Memory-Usage', $memoryUsage);
         
-        return($response);
+        return $response;
     }
     
     private function findContentType()
@@ -185,7 +146,7 @@ class RestfulController extends Controller
             $this->contentType = current($this->supportedTypes);
         }
 
-        return($this);
+        return $this;
     }
     
     private function findViewType()
@@ -195,14 +156,14 @@ class RestfulController extends Controller
         $this->viewType = end($viewBits);
         $this->viewType = strtolower($this->viewType);
 
-        return($this);
+        return $this;
     }
     
     private function buildViewTemplate($view)
     {
         $this->viewTemplateName = sprintf($this->viewTemplate, $view, $this->viewType);
 
-        return($this);
+        return $this;
     }
     
     private function checkViewTemplateExists()
@@ -215,7 +176,7 @@ class RestfulController extends Controller
             throw new HttpNotExtendedException(sprintf("The view %s does not exist. While this resource claims it can support this content type, it has no way to render it properly.", $this->viewTemplateName));
         }
 
-        return($this);
+        return $this;
     }
 
     private function randomXPerson()
@@ -229,7 +190,7 @@ class RestfulController extends Controller
         $xpeopleCount = count($xpeople)-1;
         $xpersonIdx = mt_rand(0, $xpeopleCount);
 
-        return($xpeople[$xpersonIdx]);
+        return $xpeople[$xpersonIdx];
     }
     
 }
