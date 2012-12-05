@@ -8,12 +8,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Brightmarch\Bundle\RestfulBundle\Exceptions\HttpNotAcceptableException;
 use Brightmarch\Bundle\RestfulBundle\Exceptions\HttpNotExtendedException;
 use Brightmarch\Bundle\RestfulBundle\Exceptions\HttpUnauthorizedException;
+use Brightmarch\Bundle\RestfulBundle\Exceptions\HttpUnsupportedMediaTypeException;
 
 class RestfulController extends Controller
 {
     
     /** @var array */
     private $supportedTypes = ['*/*'];
+
+    /** @var array */
+    private $requiredTypes = [];
 
     /** @var array */
     private $availableTypes = [];
@@ -43,13 +47,27 @@ class RestfulController extends Controller
 
         return $this;
     }
+
+    /**
+     * Set a list of content types this resource requires.
+     *
+     * @param [string, string, ...]
+     * @return this
+     */
+    public function resourceRequires()
+    {
+        $this->requiredTypes = array_merge(func_get_args(), $this->requiredTypes);
+        $this->canServerSupportThisRequest();
+
+        return $this;
+    }
     
     /**
      * Creates a Response object and returns it.
      *
-     * @param string
-     * @param array
-     * @param integer
+     * @param string $view
+     * @param array $parameters
+     * @param integer $statusCode
      * @return Response
      */
     public function renderResource($view, array $parameters=[], $statusCode=200)
@@ -78,10 +96,35 @@ class RestfulController extends Controller
 
     
     
+    /**
+     * Determines if the client can accept one of the media types the server supports.
+     *
+     * @return boolean
+     */
     protected function canClientAcceptThisResponse()
     {
         $this->findAvailableTypes()
             ->checkAvailableTypes();
+
+        return true;
+    }
+
+    /**
+     * Determines if the server can support the media type the client has sent.
+     *
+     * @return boolean
+     */
+    protected function canServerSupportThisRequest()
+    {
+        $contentType = $this->getRequest()
+            ->headers
+            ->get('content-type');
+
+        $contentType = strtolower($contentType);
+
+        if (!in_array($contentType, $this->requiredTypes)) {
+            throw new HttpUnsupportedMediaTypeException(sprintf("The media type %s is not supported by this resource.", $contentType));
+        }
 
         return true;
     }
