@@ -22,7 +22,7 @@ trait EntityValidationMixin
         $violations = $this->get('validator')
             ->validate($entity);
 
-        if ($violations) {
+        if (count($violations) > 0) {
             $this->throwHttpBadSyntaxException($violations, $message);
         }
 
