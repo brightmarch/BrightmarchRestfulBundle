@@ -2,8 +2,7 @@
 
 namespace Brightmarch\Bundle\RestfulBundle\Controller\Mixins;
 
-
-trait HttpAuthorizationTrait
+trait HttpAuthorizationMixin
 {
 
     /** @var array */
