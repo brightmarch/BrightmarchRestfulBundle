@@ -2,7 +2,7 @@
 
 namespace Brightmarch\Bundle\RestfulBundle\Exceptions;
 
-class HttpPreconditionFailed extends HttpException 
+class HttpPreconditionFailedException extends HttpException 
 {
 
     public function __construct($message)
