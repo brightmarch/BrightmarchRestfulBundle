@@ -121,6 +121,7 @@ class RestfulController extends Controller
             ->get('content-type');
 
         $contentType = strtolower($contentType);
+        $contentType = trim(explode(';', $contentType)[0]);
 
         if (!in_array($contentType, $this->requiredTypes)) {
             throw new HttpUnsupportedMediaTypeException(sprintf("The media type %s is not supported by this resource.", $contentType));
