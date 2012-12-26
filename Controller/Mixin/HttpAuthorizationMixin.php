@@ -1,6 +1,6 @@
 <?php
 
-namespace Brightmarch\Bundle\RestfulBundle\Controller\Mixins;
+namespace Brightmarch\Bundle\RestfulBundle\Controller\Mixin;
 
 trait HttpAuthorizationMixin
 {

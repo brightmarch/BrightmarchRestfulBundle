@@ -1,6 +1,6 @@
 <?php
 
-namespace Brightmarch\Bundle\RestfulBundle\Controller\Mixins;
+namespace Brightmarch\Bundle\RestfulBundle\Controller\Mixin;
 
 use Brightmarch\Bundle\RestfulBundle\Entity\Entity;
 use Brightmarch\Bundle\RestfulBundle\Exceptions\HttpBadSyntaxException;
@@ -23,7 +23,7 @@ trait EntityValidationMixin
             ->validate($entity);
 
         if (count($violations) > 0) {
-            $this->throwHttpBadSyntaxException($violations, $message);
+            $this->_throwHttpBadSyntaxException($violations, $message);
         }
 
         return true;
@@ -31,7 +31,7 @@ trait EntityValidationMixin
 
 
 
-    private function throwHttpBadSyntaxException(ConstraintViolationList $violations, $message)
+    private function _throwHttpBadSyntaxException(ConstraintViolationList $violations, $message)
     {
         $exception = (new HttpBadSyntaxException($message))
             ->setViolations($violations);
