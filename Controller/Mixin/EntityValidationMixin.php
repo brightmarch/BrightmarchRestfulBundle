@@ -11,13 +11,14 @@ trait EntityValidationMixin
 {
 
     /**
-     * Tests the entity to see if there are any violations. If so, a HttpBadSyntaxException is thrown.
+     * Tests the entity to see if there are any violations.
+     * If so, a HttpBadSyntaxException is thrown.
      *
      * @param Brightmarch\Bundle\RestfulBundle\Entity\Entity $entity
      * @param string $message
      * @return boolean
      */
-    public function checkForViolations(Entity $entity, $message="")
+    protected function _checkForEntityAssertions(Entity $entity, $message="")
     {
         $violations = $this->get('validator')
             ->validate($entity);
