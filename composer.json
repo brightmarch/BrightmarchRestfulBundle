@@ -12,7 +12,7 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "symfony/symfony": "2.1.*"
+        "symfony/symfony": "2.*"
     },
     "autoload": {
         "psr-0": { "Brightmarch\\Bundle\\RestfulBundle": "" }
